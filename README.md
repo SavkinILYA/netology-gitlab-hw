@@ -110,7 +110,7 @@ sudo zabbix_agentd -c /opt/homebrew/etc/zabbix/zabbix_agentd.conf
 
 ![Окно авторизации](img/zbx_log.jpg)
  
-![{Hosts](img/zbx_hosts.jpg) 
+![Hosts](img/zbx_hosts.jpg) 
 
 ![Log agent #1](img/zbx_agent1.jpg)
 
