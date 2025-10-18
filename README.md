@@ -116,6 +116,6 @@ sudo zabbix_agentd -c /opt/homebrew/etc/zabbix/zabbix_agentd.conf
 
 ![Log agent #2](img/zbx_agent2.jpg)
 
-![Latest data 1](img/zbx_ubuntu.jpg)
+![Latest data 1](img/ubuntu.jpg)
 
-![Latest data 2](img/zbx_mac.jpg)
+![Latest data 2](img/mac.jpg)
