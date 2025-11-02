@@ -1,37 +1,132 @@
-# Домашнее задание к занятию "`Система мониторинга Zabbix. Часть 2`" - `Савкин Илья`
+# Домашнее задание к занятию "`Кластеризация и балансировка нагрузки`" - `Савкин Илья`
 
 ---
 
 ### Задание 1
 
-`Создайте свой шаблон, в котором будут элементы данных, мониторящие загрузку CPU и RAM хоста`
+`Настройте балансировку Round-robin на 4 уровне с помощью HAProxy`
 
 `Этапы выполнения`
 
-1. `Создание нового шаблона`
-2. `Создание Item для загрузки CPU`
-3. `Создание Item для загрузки RAM`
+1. `Запуск двух простых HTTP-серверов на Python'
+   `Порт 8888 → Server 1 - Port 8888`
+   `Порт 9999 → Server 2 - Port 9999`
+3. `Установка и настройка HAProxy`
+   `Установлен пакет haproxy`
+   `Настроен TCP-балансировщик на порту 8080 с алгоритмом roundrobin`
+4. `Проверка балансировки`
 
-   `Скриншот шаблона с items`
+   `Выполнено 6 запросов → чередование серверов 1 → 2 → 1 → 2...`
    
-![Шаблон](img/шаблон.png)
+   `Конфигурация haproxy.cfg`
+   
+```
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log global
+    mode tcp
+    option tcplog
+    timeout connect 5000
+    timeout client  50000
+    timeout server  50000
+
+# Статистика
+listen stats
+    bind :888
+    mode http
+    stats enable
+    stats uri /stats
+    stats refresh 5s
+
+# TCP балансировка (L4) — Round Robin
+listen tcp_proxy
+    bind :8080
+    mode tcp
+    balance roundrobin
+    server s1 127.0.0.1:8888 check
+    server s2 127.0.0.1:9999 check
+```
+
+![Результат тестирования](img/121212.png)
+![Статистика HAProxy](img/status.png)
 
 ---
 
 ### Задание 2
 
-`Добавьте в Zabbix два хоста`
-
-### Задание 3
-
-`Привяжите созданный шаблон к двум хостам. Также привяжите к обоим хостам шаблон Linux by Zabbix Agent`
-
 `Этапы выполнения`
 
-1. `Привязка шаблона Custom CPU RAM Monitor`
+1. `Запуск трёх HTTP-серверов`
+   `9001 → вес 2`
+   `9002 → вес 3`
+   `9003 → вес 4`
+2. `Настройка /etc/hosts`
+   `127.0.0.1 localhost example.local`
+3. `Настройка HAProxy (L7)`
    
-![Задание 2-3](img/хосты.png)
+   ```
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    user haproxy
+    group haproxy
+    daemon
 
-### Задание 4
+defaults
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    timeout connect 5000
+    timeout client  50000
+    timeout server  50000
 
-![Задание 4](img/дашборд.png)
+# Статистика
+listen stats
+    bind :888
+    mode http
+    stats enable
+    stats uri /stats
+    stats refresh 5s
+
+# TCP L4 
+listen tcp_proxy
+    bind :8080
+    mode tcp
+    balance roundrobin
+    server s1 127.0.0.1:8888 check
+    server s2 127.0.0.1:9999 check
+
+# HTTP L7 
+frontend http_frontend
+    bind :8088
+    mode http
+    acl is_example_local hdr(host) -i example.local
+    use_backend weighted_servers if is_example_local
+    default_backend no_match
+
+backend weighted_servers
+    mode http
+    balance roundrobin
+    server s1 127.0.0.1:9001 weight 2 check
+    server s2 127.0.0.1:9002 weight 3 check
+    server s3 127.0.0.1:9003 weight 4 check
+
+backend no_match
+    mode http
+    errorfile 503 /etc/haproxy/errors/503.http
+    ```
+    
+  ![Результат тестирования](img/test2.png)
+    
+---
