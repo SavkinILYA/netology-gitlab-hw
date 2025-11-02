@@ -89,7 +89,6 @@ defaults
     timeout client  50000
     timeout server  50000
 
-# Статистика
 listen stats
     bind :888
     mode http
@@ -97,7 +96,6 @@ listen stats
     stats uri /stats
     stats refresh 5s
 
-# TCP L4 
 listen tcp_proxy
     bind :8080
     mode tcp
@@ -105,7 +103,6 @@ listen tcp_proxy
     server s1 127.0.0.1:8888 check
     server s2 127.0.0.1:9999 check
 
-# HTTP L7 
 frontend http_frontend
     bind :8088
     mode http
