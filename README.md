@@ -38,7 +38,6 @@ defaults
     timeout client  50000
     timeout server  50000
 
-# Статистика
 listen stats
     bind :888
     mode http
@@ -46,7 +45,6 @@ listen stats
     stats uri /stats
     stats refresh 5s
 
-# TCP балансировка (L4) — Round Robin
 listen tcp_proxy
     bind :8080
     mode tcp
