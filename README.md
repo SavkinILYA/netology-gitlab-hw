@@ -70,7 +70,7 @@ listen tcp_proxy
    `127.0.0.1 localhost example.local`
 3. `Настройка HAProxy (L7)`
    
-   ```
+```
 global
     log /dev/log local0
     log /dev/log local1 notice
@@ -120,7 +120,7 @@ backend weighted_servers
 backend no_match
     mode http
     errorfile 503 /etc/haproxy/errors/503.http
-    ```
+```
     
   ![Результат тестирования](img/test2.png)
     
