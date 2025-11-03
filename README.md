@@ -39,7 +39,7 @@
    `127.0.0.1 localhost example.local`
 3. `Настройка HAProxy (L7)`
    
-![Конфигурация haproxy-2.cfg](configs/haproxy-2.cfg)
+[Конфигурация haproxy-2.cfg](configs/haproxy-2.cfg)
     
   ![Результат тестирования](img/test2.png)
     
