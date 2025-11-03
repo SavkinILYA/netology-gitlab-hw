@@ -20,38 +20,7 @@
    
    `Конфигурация haproxy.cfg`
    
-```
-global
-    log /dev/log local0
-    log /dev/log local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    user haproxy
-    group haproxy
-    daemon
-
-defaults
-    log global
-    mode tcp
-    option tcplog
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-
-listen stats
-    bind :888
-    mode http
-    stats enable
-    stats uri /stats
-    stats refresh 5s
-
-listen tcp_proxy
-    bind :8080
-    mode tcp
-    balance roundrobin
-    server s1 127.0.0.1:8888 check
-    server s2 127.0.0.1:9999 check
-```
+![Конфигурация haproxy.cfg](img/haproxy.cfg)
 
 ![Результат тестирования](img/121212.png)
 ![Статистика HAProxy](img/status.png)
@@ -70,57 +39,7 @@ listen tcp_proxy
    `127.0.0.1 localhost example.local`
 3. `Настройка HAProxy (L7)`
    
-```
-global
-    log /dev/log local0
-    log /dev/log local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    user haproxy
-    group haproxy
-    daemon
-
-defaults
-    log global
-    mode http
-    option httplog
-    option dontlognull
-    timeout connect 5000
-    timeout client  50000
-    timeout server  50000
-
-listen stats
-    bind :888
-    mode http
-    stats enable
-    stats uri /stats
-    stats refresh 5s
-
-listen tcp_proxy
-    bind :8080
-    mode tcp
-    balance roundrobin
-    server s1 127.0.0.1:8888 check
-    server s2 127.0.0.1:9999 check
-
-frontend http_frontend
-    bind :8088
-    mode http
-    acl is_example_local hdr(host) -i example.local
-    use_backend weighted_servers if is_example_local
-    default_backend no_match
-
-backend weighted_servers
-    mode http
-    balance roundrobin
-    server s1 127.0.0.1:9001 weight 2 check
-    server s2 127.0.0.1:9002 weight 3 check
-    server s3 127.0.0.1:9003 weight 4 check
-
-backend no_match
-    mode http
-    errorfile 503 /etc/haproxy/errors/503.http
-```
+![Конфигурация haproxy.cfg](img/haproxy-2.cfg)
     
   ![Результат тестирования](img/test2.png)
     
