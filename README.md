@@ -20,7 +20,7 @@
    
    `Конфигурация haproxy.cfg`
    
-![Конфигурация haproxy.cfg](img/haproxy.cfg)
+[Конфигурация haproxy.cfg](configs/haproxy.cfg)
 
 ![Результат тестирования](img/121212.png)
 ![Статистика HAProxy](img/status.png)
@@ -39,7 +39,7 @@
    `127.0.0.1 localhost example.local`
 3. `Настройка HAProxy (L7)`
    
-![Конфигурация haproxy.cfg](img/haproxy-2.cfg)
+![Конфигурация haproxy-2.cfg](configs/haproxy-2.cfg)
     
   ![Результат тестирования](img/test2.png)
     
