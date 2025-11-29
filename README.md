@@ -12,16 +12,18 @@
 
 ### Конфигурация
 - Master: server-id=1, log-bin включён
+
 ![Master](img/master.png)
 
 - Slave:  server-id=2, read-only=1
+
 ![Slave](img/slave.png)
 
 
 ### Статус репликации
 - Master status: mysql-bin.000003, Position 827
 - Slave status: Replica_IO_Running=Yes, Replica_SQL_Running=Yes, Seconds_Behind_Source=0
-![Статус репликации](img/setings.png)
+![Статус репликации](img/settings.png)
 
 
 ### Тестирование
